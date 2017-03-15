@@ -35,11 +35,10 @@ use audio_tags::{AudioTags, Tags};
 
 
 /**
- * Play Sounds easily.
+ * A shorter sound.
  *
- * Simple class to play sounds easily in 2 lines. Sounds are really light
- * objects, the sound's data is entirely loaded into memory and can be shared between
- * Sounds using the SoundData object.
+ * Sounds are really light objects, the sound's data is entirely loaded into
+ * memory and can be shared between multiple `Sound`s.
  *
  * # Examples
  * ```no_run
@@ -61,15 +60,13 @@ use audio_tags::{AudioTags, Tags};
 pub struct Sound {
     /// The internal OpenAl source identifier
     al_source: u32,
-    /// The SoundData associated to the Sound.
+    /// The SoundData associated to the `Sound`.
     sound_data: Rc<RefCell<SoundData>>
 }
 
 impl Sound {
     /**
-     * Default constructor for Sound struct.
-     *
-     * Create a new struct and an associated SoundData.
+     * Loads sound data from a file and creates a new `Sound` from it.
      *
      * # Argument
      * `path` - The path of the sound file to create the SoundData.
@@ -98,10 +95,10 @@ impl Sound {
     }
 
     /**
-     * Create a new struct with a SoundData to associate.
+     * Creates a new `Sound` using the provided `SoundData`.
      *
      * # Argument
-     * `sound_data` - The sound_data to associate to the Sound.
+     * `sound_data` - The `SoundData` to associate to the `Sound`.
      *
      * # Return
      * An Option with Some(Sound) if the Sound is created properly, or None if
@@ -148,10 +145,10 @@ impl Sound {
     }
 
     /**
-     * Get the sound datas.
+     * Gets the sound data.
      *
      * # Return
-     * The SoundData associated to this Sound.
+     * The SoundData associated to this `Sound`.
      *
      * # Example
      * ```no_run
@@ -164,7 +161,7 @@ impl Sound {
     }
 
     /**
-     * Set the sound datas.
+     * Sets the sound data.
      *
      * Doesn't work if the sound is currently playing.
      *
@@ -198,7 +195,7 @@ impl Sound {
 
 impl AudioTags for Sound {
     /**
-     * Get the tags of a Sound.
+     * Gets the tags of a `Sound` value.
      *
      * # Return
      * A borrowed pointer to the internal struct SoundTags
@@ -210,7 +207,7 @@ impl AudioTags for Sound {
 
 impl AudioController for Sound {
     /**
-     * Play or resume the Sound.
+     * Plays or resumes the `Sound`.
      *
      * # Example
      * ```no_run
@@ -232,7 +229,7 @@ impl AudioController for Sound {
     }
 
      /**
-      * Pause the Sound.
+      * Pauses the `Sound`.
       *
       * # Example
       * ```no_run
@@ -251,7 +248,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Stop the Sound.
+     * Stops the `Sound`.
      *
      * # Example
      * ```no_run
@@ -270,10 +267,10 @@ impl AudioController for Sound {
     }
 
     /**
-     * Check if the Sound is playing or not.
+     * Checks whether the `Sound` is playing.
      *
      * # Return
-     * True if the Sound is playing, false otherwise.
+     * `true` if the Sound is playing, `false` otherwise.
      *
      * # Example
      * ```no_run
@@ -296,7 +293,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the current state of the Sound
+     * Gets the current state of the `Sound`
      *
      * # Return
      * The state of the sound as a variant of the enum State
@@ -317,7 +314,7 @@ impl AudioController for Sound {
     fn get_state(&self) -> State {
         check_openal_context!(Initial);
 
-        // Get the source state
+        // Gets the source state
         let mut state : i32 = 0;
         al::alGetSourcei(self.al_source, ffi::AL_SOURCE_STATE, &mut state);
 
@@ -332,7 +329,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the volume of the Sound.
+     * Sets the volume of the `Sound`.
      *
      * A value of 1.0 means unattenuated. Each division by 2 equals an
      * attenuation of about -6dB. Each multiplicaton by 2 equals an
@@ -348,7 +345,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the volume of the Sound.
+     * Gets the volume of the `Sound`.
      *
      * # Return
      * The volume of the Sound between 0. and 1.
@@ -362,7 +359,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the minimal volume for a Sound.
+     * Sets the minimal volume for a `Sound`.
      *
      * The minimum volume allowed for a source, after distance and cone
      * attenation is applied (if applicable).
@@ -378,7 +375,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the minimal volume of the Sound.
+     * Gets the minimal volume of the `Sound`.
      *
      * # Return
      * The minimal volume of the Sound between 0. and 1.
@@ -392,7 +389,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the maximal volume for a Sound.
+     * Sets the maximal volume for a `Sound`.
      *
      * The maximum volume allowed for a sound, after distance and cone
      * attenation is applied (if applicable).
@@ -408,7 +405,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the maximal volume of the Sound.
+     * Gets the maximal volume of the `Sound`.
      *
      * # Return
      * The maximal volume of the Sound between 0. and 1.
@@ -422,7 +419,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the Sound looping or not
+     * Sets the Sound looping or not
      *
      * The default looping is false.
      *
@@ -462,7 +459,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the pitch of the source.
+     * Sets the pitch of the source.
      *
      * A multiplier for the frequency (sample rate) of the source's buffer.
      *
@@ -478,7 +475,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the pitch of the source.
+     * Sets the pitch of the source.
      *
      * # Return
      * The pitch of the sound in the range [0.5 - 2.0]
@@ -492,7 +489,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the position of the sound relative to the listener or absolute.
+     * Sets the position of the sound relative to the listener or absolute.
      *
      * Default position is absolute.
      *
@@ -533,7 +530,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the Sound location in three dimensional space.
+     * Sets the Sound location in three dimensional space.
      *
      * OpenAL, like OpenGL, uses a right handed coordinate system, where in a
      * frontal default view X (thumb) points right, Y points up (index finger),
@@ -554,7 +551,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the position of the Sound in three dimensional space.
+     * Gets the position of the Sound in three dimensional space.
      *
      * # Return
      * A three dimensional vector of f32 containing the position of the
@@ -569,14 +566,14 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the direction of the Sound.
+     * Sets the direction of the `Sound`.
      *
      * Specifies the current direction in local space.
      *
      * The default direction is: [0., 0., 0.]
      *
      * # Argument
-     * `direction` - The new direction of the Sound.
+     * `direction` - The new direction of the `Sound`.
      */
     fn set_direction(&mut self, direction: [f32; 3]) -> () {
         check_openal_context!(());
@@ -585,10 +582,10 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the direction of the Sound.
+     * Gets the direction of the `Sound`.
      *
      * # Return
-     * The current direction of the Sound.
+     * The current direction of the `Sound`.
      */
     fn get_direction(&self)  -> [f32; 3] {
         check_openal_context!([0.; 3]);
@@ -599,7 +596,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the maximum distance of the Sound.
+     * Sets the maximum distance of the `Sound`.
      *
      * The distance above which the source is not attenuated any further with a
      * clamped distance model, or where attenuation reaches 0.0 gain for linear
@@ -617,7 +614,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the maximum distance of the Sound.
+     * Gets the maximum distance of the `Sound`.
      *
      * # Return
      * The maximum distance of the Sound in the range [0., +inf]
@@ -633,7 +630,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the reference distance of the Sound.
+     * Sets the reference distance of the `Sound`.
      *
      * The distance in units that no attenuation occurs.
      * At 0.0, no distance attenuation ever occurs on non-linear attenuation
@@ -642,7 +639,7 @@ impl AudioController for Sound {
      * The default distance reference is 1.
      *
      * # Argument
-     * * `ref_distance` - The new reference distance of the Sound.
+     * * `ref_distance` - The new reference distance of the `Sound`.
      */
     fn set_reference_distance(&mut self, ref_distance: f32) -> () {
         check_openal_context!(());
@@ -651,10 +648,10 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the reference distance of the Sound.
+     * Gets the reference distance of the `Sound`.
      *
      * # Return
-     * The current reference distance of the Sound.
+     * The current reference distance of the `Sound`.
      */
     fn get_reference_distance(&self) -> f32 {
         check_openal_context!(1.);
@@ -667,7 +664,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Set the attenuation of a Sound.
+     * Sets the attenuation of a `Sound`.
      *
      * Multiplier to exaggerate or diminish distance attenuation.
      * At 0.0, no distance attenuation ever occurs.
@@ -684,7 +681,7 @@ impl AudioController for Sound {
     }
 
     /**
-     * Get the attenuation of a Sound.
+     * Gets the attenuation of a `Sound`.
      *
      * # Return
      * The current attenuation for the sound in the range [0., 1.].
@@ -703,7 +700,7 @@ impl AudioController for Sound {
 
 //#[unsafe_destructor]
 impl Drop for Sound {
-    ///Destroy all the resources attached to the Sound.
+    /// Destroy all the resources attached to the `Sound`.
     fn drop(&mut self) -> () {
         unsafe {
             ffi::alDeleteSources(1, &mut self.al_source);
