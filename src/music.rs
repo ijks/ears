@@ -40,13 +40,11 @@ use audio_controller::AudioController;
 use audio_tags::{Tags, AudioTags, get_sound_tags};
 
 /**
- * Play Music easily.
+ * A single music track.
  *
- * Simple class to play music easily in 2 lines.
- *
- * Music is played in their own task and the samples are loaded progressively
+ * Music is played in its own thread and the samples are loaded progressively
  * using circular buffers.
- * They aren't associated to a SoundData like Sounds.
+ * Unlike `Sound`s, `Music` own their sound data instead of sharing it.
  *
  * # Examples
  * ```no_run
@@ -85,10 +83,10 @@ pub struct Music {
 
 impl Music {
     /**
-     * Create a new Music
+     * Loads a new `Music` value from a file.
      *
      * # Argument
-     * * `path` - The path of the file to load the music
+     * * `path` - The path of the file to load the music from
      *
      * # Return
      * An Option containing Some(Music) on success, None otherwise
@@ -175,7 +173,7 @@ impl Music {
         // Queue the buffers
         al::alSourceQueueBuffers(al_source, 2, &al_buffers[0]);
 
-        // Launche the Music
+        // Launch the music
         al::alSourcePlay(al_source);
 
         let (looping_sender, looping_receiver): (Sender<bool>, Receiver<bool>) = channel();
@@ -247,7 +245,7 @@ impl AudioTags for Music {
 
 impl AudioController for Music {
     /**
-     * Play or resume the Music.
+     * Plays or resumes the `Music`.
      */
     fn play(&mut self) -> () {
         check_openal_context!(());
@@ -267,7 +265,7 @@ impl AudioController for Music {
     }
 
     /**
-     * Pause the Music.
+     * Pauses the `Music`.
      */
     fn pause(&mut self) -> () {
         check_openal_context!(());
@@ -276,7 +274,7 @@ impl AudioController for Music {
     }
 
     /**
-     * Stop the Music.
+     * Stops the `Music`.
      */
     fn stop(&mut self) -> () {
         check_openal_context!(());
@@ -285,10 +283,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Check if the Music is playing or not.
+     * Checks if the `Music` is playing or not.
      *
      * # Return
-     * True if the Music is playing, false otherwise.
+     * `true` if the music is playing, `false` otherwise.
      */
     fn is_playing(&self) -> bool {
         match self.get_state() {
@@ -298,10 +296,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the current state of the Music
+     * Gets the current state of the `Music`
      *
      * # Return
-     * The state of the music as a variant of the enum State
+     * The state of the music as a variant of the enum `State`
      */
     fn get_state(&self) -> State {
         check_openal_context!(Initial);
@@ -318,14 +316,14 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the volume of the Music.
+     * Sets the volume of the `Music`.
      *
      * A value of 1.0 means unattenuated. Each division by 2 equals an attenuation
      * of about -6dB. Each multiplicaton by 2 equals an amplification of about
      * +6dB.
      *
      * # Argument
-     * * `volume` - The volume of the Music, should be between 0. and 1.
+     * * `volume` - The volume of the music, should be between 0 and 1.
      */
     fn set_volume(&mut self, volume: f32) -> () {
         check_openal_context!(());
@@ -334,10 +332,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the volume of the Music.
+     * Gets the volume of the `Music`.
      *
      * # Return
-     * The volume of the Music between 0. and 1.
+     * The volume of the music between 0 and 1.
      */
     fn get_volume(&self) -> f32 {
         check_openal_context!(0.);
@@ -348,13 +346,13 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the minimal volume for a Music.
+     * Sets the minimal volume for a `Music`.
      *
      * The minimum volume allowed for a music, after distance and cone
      * attenation is applied (if applicable).
      *
      * # Argument
-     * * `min_volume` - The new minimal volume of the Music should be
+     * * `min_volume` - The new minimal volume of the music should be
      * between 0. and 1.
      */
     fn set_min_volume(&mut self, min_volume: f32) -> () {
@@ -364,10 +362,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the minimal volume of the Music.
+     * Gets the minimal volume of a `Music` value.
      *
      * # Return
-     * The minimal volume of the Music between 0. and 1.
+     * The minimal volume of the music between 0 and 1.
      */
     fn get_min_volume(&self) -> f32 {
         check_openal_context!(0.);
@@ -378,13 +376,13 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the maximal volume for a Music.
+     * Sets the maximal volume of a `Music` value.
      *
      * The maximum volume allowed for a Music, after distance and cone
      * attenation is applied (if applicable).
      *
      * # Argument
-     * * `max_volume` - The new maximal volume of the Music should be
+     * * `max_volume` - The new maximal volume of the music should be
      * between 0. and 1.
      */
     fn set_max_volume(&mut self, max_volume: f32) -> () {
@@ -394,10 +392,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the maximal volume of the Music.
+     * Gets the maximal volume of a `Music` value.
      *
      * # Return
-     * The maximal volume of the Music between 0. and 1.
+     * The maximal volume of the music between 0. and 1.
      */
     fn get_max_volume(&self) -> f32 {
         check_openal_context!(0.);
@@ -408,9 +406,9 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the Music looping or not
+     * Sets whether a `Music` value loops or not
      *
-     * The default looping is false.
+     * The default value is `false`.
      *
      * # Arguments
      * `looping` - The new looping state.
@@ -423,24 +421,24 @@ impl AudioController for Music {
     }
 
     /**
-     * Check if the Music is looping or not
+     * Checks whether a `Music` value is looping.
      *
      * # Return
-     * True if the Music is looping, false otherwise.
+     * True if the music is looping, false otherwise.
      */
     fn is_looping(&self) -> bool {
         self.is_looping
     }
 
     /**
-     * Set the pitch of the Music.
+     * Sets the pitch of a `Music` value.
      *
-     * A multiplier for the frequency (sample rate) of the Music's buffer.
+     * A multiplier for the frequency (sample rate) of the sound buffer.
      *
      * Default pitch is 1.0.
      *
      * # Argument
-     * * `new_pitch` - The new pitch of the Music in the range [0.5 - 2.0]
+     * * `new_pitch` - The new pitch of the music in the range [0.5 - 2.0]
      */
     fn set_pitch(&mut self, pitch: f32) -> () {
         check_openal_context!(());
@@ -449,10 +447,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the pitch of the Music.
+     * Gets the pitch of a `Music` value.
      *
      * # Return
-     * The pitch of the Music in the range [0.5 - 2.0]
+     * The pitch of the music in the range [0.5 - 2.0]
      */
     fn get_pitch(&self) -> f32 {
         check_openal_context!(0.);
@@ -463,13 +461,14 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the position of the Music relative to the listener or absolute.
+     * Sets whether the position of the music is relative to the listener
+     * or absolute.
      *
-     * Default position is absolute.
+     * The default position is absolute.
      *
      * # Argument
-     * `relative` - True to set Music relative to the listener false to set the
-     * Music position absolute.
+     * `relative` - `true` to set Music relative to the listener, `false` to set
+     * the music position absolute.
      */
     fn set_relative(&mut self, relative: bool) -> () {
         check_openal_context!(());
@@ -485,10 +484,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Is the Music relative to the listener or not?
+     * Checks whether a `Music` value is relative to the listener.
      *
      * # Return
-     * True if the Music is relative to the listener false otherwise
+     * `true` if the music is relative to the listener, `false` otherwise.
      */
     fn is_relative(&mut self) -> bool {
         check_openal_context!(false);
@@ -503,7 +502,7 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the Music location in three dimensional space.
+     * Sets the music's location in three dimensional space.
      *
      * OpenAL, like OpenGL, uses a right handed coordinate system, where in a
      * frontal default view X (thumb) points right, Y points up (index finger),
@@ -524,7 +523,7 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the position of the Music in three dimensional space.
+     * Gets the position of the music in three dimensional space.
      *
      * # Return
      * A three dimensional vector of f32 containing the position of the
@@ -539,14 +538,14 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the direction of the Music.
+     * Sets the direction of the music.
      *
      * Specifies the current direction in local space.
      *
      * The default direction is: [0., 0., 0.]
      *
      * # Argument
-     * `direction` - The new direction of the Music.
+     * `direction` - The new direction of the music.
      */
     fn set_direction(&mut self, direction: [f32; 3]) -> () {
         check_openal_context!(());
@@ -555,10 +554,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the direction of the Music.
+     * Gets the direction of the music.
      *
      * # Return
-     * The current direction of the Music.
+     * The current direction of the music.
      */
     fn get_direction(&self)  -> [f32; 3] {
         check_openal_context!([0.; 3]);
@@ -569,13 +568,13 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the maximum distance of the Music.
+     * Sets the maximum distance of the music.
      *
      * The distance above which the source is not attenuated any further with a
      * clamped distance model, or where attenuation reaches 0.0 gain for linear
      * distance models with a default rolloff factor.
      *
-     * The default maximum distance is +inf.
+     * The default maximum distance is positive infinity.
      *
      * # Argument
      * `max_distance` - The new maximum distance in the range [0., +inf]
@@ -587,10 +586,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the maximum distance of the Music.
+     * Gets the maximum distance of the music.
      *
      * # Return
-     * The maximum distance of the Music in the range [0., +inf]
+     * The maximum distance of the music in the range [0., +inf]
      */
     fn get_max_distance(&self) -> f32 {
         check_openal_context!(0.);
@@ -601,7 +600,7 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the reference distance of the Music.
+     * Sets the reference distance of the music.
      *
      * The distance in units that no attenuation occurs.
      * At 0.0, no distance attenuation ever occurs on non-linear
@@ -610,7 +609,7 @@ impl AudioController for Music {
      * The default distance reference is 1.
      *
      * # Argument
-     * * `ref_distance` - The new reference distance of the Music.
+     * * `ref_distance` - The new reference distance of the music.
      */
     fn set_reference_distance(&mut self, ref_distance: f32) -> () {
         check_openal_context!(());
@@ -619,10 +618,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the reference distance of the Music.
+     * Gets the reference distance of the music.
      *
      * # Return
-     * The current reference distance of the Music.
+     * The current reference distance of the music.
      */
     fn get_reference_distance(&self) -> f32 {
         check_openal_context!(1.);
@@ -635,7 +634,7 @@ impl AudioController for Music {
     }
 
     /**
-     * Set the attenuation of a Music.
+     * Sets the attenuation of a `Music` value.
      *
      * Multiplier to exaggerate or diminish distance attenuation.
      * At 0.0, no distance attenuation ever occurs.
@@ -643,7 +642,7 @@ impl AudioController for Music {
      * The default attenuation is 1.
      *
      * # Arguments
-     * `attenuation` - The new attenuation for the Music in the range [0., 1.].
+     * `attenuation` - The new attenuation for the music in the range [0., 1.].
      */
     fn set_attenuation(&mut self, attenuation: f32) -> () {
         check_openal_context!(());
@@ -652,10 +651,10 @@ impl AudioController for Music {
     }
 
     /**
-     * Get the attenuation of a Music.
+     * Gets the attenuation of a `Music` value.
      *
      * # Return
-     * The current attenuation for the Music in the range [0., 1.].
+     * The current attenuation of the music in the range [0., 1.].
      */
     fn get_attenuation(&self) -> f32 {
         check_openal_context!(1.);
@@ -670,7 +669,7 @@ impl AudioController for Music {
 
 
 impl Drop for Music {
-    /// Destroy all the resources of the Music.
+    /// Destroys all the resources of a `Music` value.
     fn drop(&mut self) -> () {
         self.stop();
         if let Some(handle) = self.thread_handle.take() {
