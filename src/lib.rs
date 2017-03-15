@@ -22,12 +22,11 @@
 /*!
 # ears
 
-__ears__ is a simple library for play Sounds and Musics in Rust.
+__ears__ is a simple library to play sounds and music in Rust, built on top of
+OpenAL and libsndfile.
 
-__ears__ is build on the top of OpenAL and libsndfile.
-
-* Provide anaccess to the OpenAL spatialization functionality in a simple way.
-* Accept a lot of audio formats thanks to libsndfile.
+* Provides access to the OpenAL spatialization functionality in a simple way.
+* Accepts a lot of audio formats thanks to libsndfile.
 
 # Example
 
@@ -49,29 +48,25 @@ fn main() {
 
 # Functionnality
 
-__ears__ provide two way for play audio files.
+__ears__ provides two ways to play audio files:
 
-* The Sound class, which represent light sounds who can share a buffer of samples with another Sound.
-* The Music class, which is a bigger sound and who can't share sample buffer.
+* The `Sound` type, which represents light sounds that can share a buffer of
+samples with other `Sounds`.
+* The `Music` type, which represents a bigger sound and can't share sample buffers.
 
 # Use ears
 
-As said before, __ears__ require OpenAL and libsndfile, you need to install these two libraries on
-your system. Then import stuff from __ears__ in your project, you can import all the stuff:
+As mentioned before, __ears__ requires OpenAL and libsndfile, which you will need
+to install on your system in order to build it. See README.md for more details.
 
-```rust
-extern crate ears;
-
-use ears::*;
-# fn main() {}
-```
-
-or a specific one:
+Once built, __ears__ can be used like any other Rust crate:
 
 ```rust
 extern crate ears;
 
 use ears::Music;
+// or some other type/module
+
 # fn main() {}
 ```
 */
